@@ -100,7 +100,7 @@ let Comprador ={
     saldoActual:14000.00
 }
 
-let Pedido ={
+let pedido ={
     ID:5816,
     Producto_Clave:3312,
     Comprador_Clave:455,
@@ -111,9 +111,9 @@ let Pedido ={
 
 //En Base a los 3 objetos necesitamos  el costo de la compra y si le alcanza con sus saldo a favor
 let {Producto_Precio: Precio2}=Producto2;
-let {Cantidad:Pedido_Cantidad}=Pedido;
+let {Cantidad:Pedido_Cantidad}=pedido;
 let {saldoActual:Cliente_SaldoActual} = Comprador;
-let Costo_Compra =Producto_Precio * Pedido_Cantidad;
+let Costo_Compra =Producto_Precio * pedido_Cantidad;
 
 console.log(`El cliente ha agregado a su carrito de compras ${Pedido_Cantidad} unidades, con un costo total de: ${Costo_Compra} `)
 
@@ -160,10 +160,10 @@ console.table(Comprador);
 //Eliminar propiedades existentes de un Objeto
 console.log("%c6.- Eliminar Propiedades Existentes de un Objeto", style_console);
 console.log("La estructura y valores del objeto PEDIDO son previos a la modificación: ")
-console.table(Pedido)
+console.table(pedido)
 delete Pedido.TipoPago
 console.log("Después de la modificación...")
-console.table(Pedido);
+console.table(pedido);
 //
 console.log("%c7.- Mètodos para controlar la mutabilidad de los objetos, congelaciòn (FREEZE)", style_console);
 //Si deseamos no permitir que los objetos sean modificados ni en estructura, ni en valor, utilizaremos el mètodo FREEZE (congelar)
@@ -180,18 +180,18 @@ console.table(Comprador)
 console.log("%c8.- Mètodos para controlar la mutabilidad de los Objetos, sellado (SEAL)", style_console);
 //Sin embargo, en el caso que deseamos poder modificar los valores de las propiedades del objeto, pero no su estructura, usaremos SEAL
 console.log("Objeto antes de ser modificado: ")
-console.table(Pedido)
+console.table(pedido)
 //Sellamos el objeto
-Object.seal(Pedido)
+Object.seal(pedido)
 //Intentamos modificar su estructura
 Pedido['FechaPedido'] = "25/09/2024 11:05:03"
 delete Pedido['Cantidad']
 console.log('Verificamos su se realizaron los cambios en el objeto PEDIDO: ')
-console.table(Pedido)
+console.table(pedido)
 //Ahora intentamos modificar el valor de las propiedades
 Pedido.Cantidad = 5
 console.log('Verificamos si se realizaron los cambios en el Objeto PEDIDO: ')
-console.table(Pedido)
+console.table(pedido)
 
 console.log("%c9.- Destructuraciòn de 2 o màs Objetos", style_console);
 
@@ -239,11 +239,49 @@ console.log("%c10.- Uniòn de objetos usando el mètodo de asignaciòn (ASSING)"
 console.log("imprimimos la estructura y valores del Objeto PRODUCTO")
 console.table(Producto);
 console.log("imprimimos la estructura y valores del Objeto PEDIDO")
-console.table(Pedido);
+console.table(pedido);
 //Suponiendo que el usuario ya los realizò el pago del pedido se convertira en una VENTA que requiere informaciòn de ambos objetos
 //IMPORTANTE: ASSING, no solo permite la fusión de 2 o más objetos, también nmuta los objetos, también muta los objetos originales, perdiendo el valor original del ID en este caso
 let Producto3={...Producto}
-const Venta = Object.assign(Producto3, Pedido);
+const Venta = Object.assign(Producto3, pedido);
 console.log("Consultamos este nuevo objeto VENTA")
 console.table(Venta);
 ///Para que se vean ambos Id se debe agregar otra funcion 
+//Unión de Objetos usando SPREAD OPERATOR para evitar la perdida de información con objetos que comparten el mismo nombre de sus propiedades
+console.log("%c11.- Unión de objetos usando el SPREAD OPERATOR (...)", style_console);
+
+//Parchamos el error, reiniciando el valor del producto ID al original
+//Producto.Id=100;
+
+console.table(Producto)
+console.table(Comprador)
+console.table(pedido)
+
+const Venta2 ={
+    producto: {...Producto},
+    comprador:{...Comprador},
+    pedido:{pedido}
+}
+console.log("Fusionamos los 3 objetos en uno nuevo, sin perdida de información")
+console.log(Venta2)
+console.table(Venta2)
+
+console.log("%c12.- Mutabilidad POST Unión de Objetos", style_console);
+
+//Vamos a verificar el estatus de mutabilidad de los objetos
+console.log("Vamos a verificar el estatus de mutabilidad del objeto PEDIDO")
+console.log(`Esta el objeto de Pedido Congelado ?: ${Object.isFrozen(pedido)}`);
+console.log(`Esta el objeto de Pedido Sellado ?: ${Object.isSealed(pedido)}`);
+
+console.log("Vamos a verificar el estatus de mutabilidad del objeto COMPRADOR")
+console.log(`Esta el objeto de Pedido Congelado ?: ${Object.isFrozen(Comprador)}`);
+console.log(`Esta el objeto de Pedido Sellado ?: ${Object.isSealed(Comprador)}`);
+
+console.log("Vamos a verificar el estatus de mutabilidad del objeto PRODUCTO")
+console.log(`Esta el objeto de Pedido Congelado ?: ${Object.isFrozen(Producto)}`);
+console.log(`Esta el objeto de Pedido Sellado ?: ${Object.isSealed(Producto)}`);
+
+//Modificamos la estructura de producto, agregando una nueva propiedad
+Producto['isLegacy']=false
+console.log(Producto)
+console.table(Venta2);
